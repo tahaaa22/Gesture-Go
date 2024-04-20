@@ -1,11 +1,12 @@
 import Graph
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QMovie, QTransform
+from PyQt5.QtGui import QMovie
+import sys
+from pyqtgraph import PlotWidget
 
 
-class Ui_MainWindow(object):
+class GUI(object):
         def __init__(self): 
-                # Be careful there is a difference between Graph_1 and Graph_One. The first one is an object of the class we created, but the second one is the name
                 # of the plot widget of the Top Graph.
                 self.Graph_1 = Graph.Graph(1, self, None)
                 self.Graph_2 = Graph.Graph(2, self, None)
@@ -241,14 +242,13 @@ class Ui_MainWindow(object):
                 self.label.setText(_translate("MainWindow", "Filtered Signal"))
                 self.PauseButton.setText(_translate("MainWindow", " Pause "))
                 self.label_4.setText(_translate("MainWindow", "Current Command"))
-from pyqtgraph import PlotWidget
+
 
 
 if __name__ == "__main__":
-    import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = GUI()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

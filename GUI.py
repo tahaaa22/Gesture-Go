@@ -215,6 +215,8 @@ class GUI(object):
                 self.commandsBox.addItem(spacerItem8)
                 self.gridLayout.addWidget(self.groupBox, 3, 0, 1, 1)
                 MainWindow.setCentralWidget(self.centralwidget)
+                self.VoiceTransition()
+                self.DirectionTransition()
 
                 self.retranslateUi(MainWindow)
                 QtCore.QMetaObject.connectSlotsByName(MainWindow)

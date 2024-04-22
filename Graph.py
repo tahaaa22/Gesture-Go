@@ -16,22 +16,12 @@ class Graph:
 
     def Browse_Signals(self):
         File_Path, _ = QFileDialog.getOpenFileName(None, "Browse Signal", "", "All Files (*)")
-        Selected_Color_index = 0
+        #test6.txt
         if File_Path:
             Record = wfdb.rdrecord(File_Path[:-4])
             Y_Coordinates = list(Record.p_signal[:, 0])
             X_Coordinates = list(np.arange(len(Y_Coordinates)))
-            Colors = ['r', 'green', 'b', 'white', 'orange', 'y', 'light blue', 'pink']
-            Random_Color = random.choice(Colors)
-            self.Selected_Colors.append(Random_Color)
-            if len(self.Selected_Colors) > 1:
-                while Random_Color in self.Selected_Colors:
-                    Random_Color = random.choice(Colors)
-                self.Selected_Colors.append(Random_Color)
-
-            Sample_Signal = Signals.Signal(col = Random_Color, X_List=X_Coordinates, Y_list=Y_Coordinates,graphWdg=self.Graph_Window, graphObj=self)
-
-            self.Add_Signal(Sample_Signal)
+            Sample_Signal = Signals.Signal(col = "red", X_List=X_Coordinates, Y_list=Y_Coordinates,graphWdg=self.Graph_Window, graphObj=self)
 
 
     def Toggle_Play_Pause(self):

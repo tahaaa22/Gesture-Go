@@ -3,6 +3,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
 import sys
 from pyqtgraph import PlotWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+
+
+graph_1 = None
+
+class RawSignalWidget(PlotWidget):
+    def __init__(self):
+        super().__init__() 
+
+    def mouseDoubleClickEvent(self, event):
+              graph_1.Browse_Signals()
 
 
 class GUI(object):
@@ -74,7 +85,7 @@ class GUI(object):
                 spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
                 self.horizontalLayout.addItem(spacerItem2)
                 self.verticalLayout.addLayout(self.horizontalLayout)
-                self.RawSignal = PlotWidget(self.Signals)
+                self.RawSignal = RawSignalWidget()
                 sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
                 sizePolicy.setHorizontalStretch(0)
                 sizePolicy.setVerticalStretch(0)
@@ -83,6 +94,7 @@ class GUI(object):
                 self.RawSignal.setMinimumSize(QtCore.QSize(0, 161))
                 self.RawSignal.setStyleSheet("border: none;")
                 self.RawSignal.setObjectName("RawSignal")
+                #self.RawSignal.plot_widget.mouseDoubleClickEvent = self.Graph_1.Browse_Signals()
                 self.verticalLayout.addWidget(self.RawSignal)
                 self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
                 self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -107,12 +119,38 @@ class GUI(object):
                 self.FilteredSignal.setMinimumSize(QtCore.QSize(0, 161))
                 self.FilteredSignal.setStyleSheet("border: none;")
                 self.FilteredSignal.setObjectName("FilteredSignal")
+                #self.FilteredSignal.doubleClicked.connect(self.Graph_1.Browse_Signals)
                 self.verticalLayout.addWidget(self.FilteredSignal)
                 self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
                 self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+                self.PEAKSlabel = QtWidgets.QLabel(self.Signals)
+                font = QtGui.QFont()
+                font.setPointSize(13)
+                font.setBold(True)
+                font.setWeight(75)
+                self.PEAKSlabel.setFont(font)
+                self.PEAKSlabel.setStyleSheet("color : white;\n"
+        "")
+                self.PEAKSlabel.setObjectName("PEAKSlabel")
+                self.horizontalLayout_6.addWidget(self.PEAKSlabel)
+                self.number = QtWidgets.QLineEdit(self.Signals)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.number.sizePolicy().hasHeightForWidth())
+                self.number.setSizePolicy(sizePolicy)
+                self.number.setMaximumSize(QtCore.QSize(45, 16777215))
+                font = QtGui.QFont()
+                font.setBold(True)
+                font.setPointSize(13)
+                font.setWeight(75)
+                self.number.setFont(font)
+                self.number.setStyleSheet("color:white;\n")
+                self.number.setObjectName("number")
+                self.horizontalLayout_6.addWidget(self.number)
                 spacerItem4 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
                 self.horizontalLayout_6.addItem(spacerItem4)
-                self.PauseButton = QtWidgets.QPushButton(self.Signals)
+                self.PauseButton = QtWidgets.QPushButton(self.Signals, clicked = lambda : self.Graph_1.Toggle_Play_Pause())
                 sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
                 sizePolicy.setHorizontalStretch(0)
                 sizePolicy.setVerticalStretch(0)
@@ -122,7 +160,7 @@ class GUI(object):
                 self.PauseButton.setMaximumSize(QtCore.QSize(501, 16777215))
                 font = QtGui.QFont()
                 font.setPointSize(15)
-                font.setBold(False)
+                font.setBold(True)
                 font.setWeight(50)
                 self.PauseButton.setFont(font)
                 self.PauseButton.setStyleSheet("color:white;\n"
@@ -194,6 +232,7 @@ class GUI(object):
                 self.directionImage.setScaledContents(True)
                 self.directionImage.setObjectName("directionImage")
                 self.horizontalLayout_3.addWidget(self.directionImage)
+                ########################################################################################################
                 self.voiceImage = QtWidgets.QLabel(self.comandBox)
                 sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
                 sizePolicy.setHorizontalStretch(0)
@@ -206,32 +245,31 @@ class GUI(object):
                 "background: transparent;\n"
                 "background-color: transparent;")
                 self.voiceImage.setText("")
-                self.voiceImage.setPixmap(QtGui.QPixmap("Assets/static_voice.png"))
+                self.voiceImage.setPixmap(QtGui.QPixmap("Assets/stop.png"))
                 self.voiceImage.setScaledContents(True)
                 self.voiceImage.setObjectName("voiceImage")
                 self.horizontalLayout_3.addWidget(self.voiceImage)
+                #########################################################################################################
                 self.commandsBox.addWidget(self.comandBox)
                 spacerItem8 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Minimum)
                 self.commandsBox.addItem(spacerItem8)
                 self.gridLayout.addWidget(self.groupBox, 3, 0, 1, 1)
                 MainWindow.setCentralWidget(self.centralwidget)
-                self.VoiceTransition()
-                self.DirectionTransition()
+                #self.VoiceTransition()
+                #self.DirectionTransition()
 
                 self.retranslateUi(MainWindow)
                 QtCore.QMetaObject.connectSlotsByName(MainWindow)
+                self.Graph_1.Graph_Window = self.RawSignal
+                self.Graph_2.Graph_Window = self.FilteredSignal
                 
-        def VoiceTransition(self):
-                # Load the GIF file
-                movie = QMovie("Assets/voice.gif")
-                # Set the movie to the label
-                self.voiceImage.setMovie(movie)
-                # Start the GIF animation
-                movie.start()
+        def ThreshHold(self,threshhold):
+         self.voiceImage.setPixmap(QtGui.QPixmap(threshhold))
                 
-        def DirectionTransition(self):
+                                    
+        def DirectionTransition(self, current):
                 # Load the GIF file
-                movie = QMovie("Assets/forward-direction.gif")
+                movie = QMovie(current)
                 # Set the movie to the label
                 self.directionImage.setMovie(movie)
                 movie.start()
@@ -243,6 +281,7 @@ class GUI(object):
                 self.label_2.setText(_translate("MainWindow", "Raw Signal"))
                 self.label.setText(_translate("MainWindow", "Filtered Signal"))
                 self.PauseButton.setText(_translate("MainWindow", " Pause "))
+                self.PEAKSlabel.setText(_translate("MainWindow", "Number of Flexions:"))
                 self.label_4.setText(_translate("MainWindow", "Current Command"))
 
 
@@ -251,6 +290,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = GUI()
+    graph_1 = ui.Graph_1
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
